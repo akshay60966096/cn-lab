@@ -1,0 +1,237 @@
+// BIT Stuffing program 
+//gobackn 
+//broadcast tree 
+#include<stdio.h> 
+#include<string.h> 
+#include<conio.h> 
+int main() {char ip[50],op[100]; 
+int i,ln,j; //clrscr(); 
+printf("\n enter a text:"); 
+gets(ip); //ln=strlen(ip); 
+for(i=0,j=0;ip[i]!='\0';i++,j++) 
+{ op[j]=ip[i]; 
+if(strncmp(ip+i,"11111",5)==0) 
+{ op[j]='\0'; strcat(op,"111110"); 
+i=i+4; j=j+5; } } op[j]='\0'; 
+printf("\n output is:01111110 %s 
+01111110",op); getch(); } 
+
+
+
+//charstuff 
+#include<stdio.h> 
+#include<string.h> 
+#include<conio.h> 
+int main() { 
+char ip[100],op[100]; 
+int i,ln,j; //clrscr(); 
+printf("\n enter a text:"); 
+gets(ip); //ln=strlen(ip); 
+for(i=0,j=0;ip[i]!='\0';i++,j++) 
+{ op[j]=ip[i]; 
+if( strncmp(ip+i,"FLAG",4)==0 ) 
+{ op[j]='\0'; 
+strcat(op,"ESC FLAG"); 
+i=i+3; j=j+7; } 
+if( strncmp(ip+i,"ESC",3)==0 ) 
+{ op[j]='\0'; strcat(op,"ESC ESC"); 
+i=i+2; j=j+6; } } op[j]='\0'; 
+printf("output is:FLAG %s FLAG",op); 
+getch(); } 
+
+
+
+//crc 
+#include<stdio.h> 
+#include<conio.h> 
+#include<string.h> 
+void main() { 
+char m[30],g[20],tm[20]; 
+int ml,gl,i,j,f; 
+clrscr(); printf("\n enter message"); 
+gets(m); ml=strlen(m); 
+printf("\n msg length:%d",ml); 
+printf("\n enter generator or divisor"); 
+gets(g); gl=strlen(g); 
+printf("\n generator msg length:%d",gl); 
+for(i=0;i<gl-1;i++) 
+m[ml+i]='0'; m[ml+i]='\0'; 
+printf("\n after padding,msg is:%s",m); 
+for(i=0;i<gl;i++) 
+tm[i]=m[i]; for(i=0;i<ml;i++) { 
+if(tm[0]=='1') { for(j=0;j<gl;j++) { 
+if(tm[j]==g[j]) 
+tm[j]='0'; else tm[j]='1'; } } 
+for(j=0;j<gl-1;j++) 
+tm[j]=tm[j+1]; tm[gl-1]=m[i+gl]; } 
+tm[gl-1]='\0'; 
+printf("\n remainder is:%s",tm); 
+for(i=0;i<gl-1;i++) 
+m[ml+i]=tm[i]; m[ml+i]='\0'; 
+printf("\n after adding remainder,msg 
+is:%s",m); printf("\n enter received 
+message"); 
+gets(m); for(i=0;i<gl;i++) 
+tm[i]=m[i]; for(i=0;i<ml;i++) { 
+if(tm[0]=='1') { for(j=0;j<gl;j++) { 
+if(tm[j]==g[j]) tm[j]='0'; else 
+tm[j]='1'; } } for(j=0;j<gl-1;j++) 
+tm[j]=tm[j+1]; tm[gl-1]=m[i+gl]; } 
+tm[gl-1]='\0'; 
+printf("\n remainder is:%s",tm); 
+for(i=0,f=0;i<gl-1;i++) { 
+if(tm[i]!='0') { f=1;break;} } 
+if(f==0) 
+printf("\n no error in message"); 
+else printf("\n error in received 
+message"); getch(); } 
+
+
+
+// goback n
+#include<stdio.h> 
+int main() { 
+int windowsize,sent=0,ack,i; 
+printf("enter window size\n"); 
+scanf("%d",&windowsize); 
+while(1) { 
+for( i = 1; i <= windowsize; i++) { 
+printf("Frame %d has been 
+transmitted.\n",sent); 
+sent++; 
+if(sent == windowsize) 
+break; } 
+printf("\nPlease enter the last 
+Acknowledgement received.\n"); 
+scanf("%d",&ack); 
+if(ack == windowsize) 
+break; else 
+sent = ack; } return 0; } 
+
+
+
+
+//djikstras 
+#include<stdio.h> 
+#include<conio.h> 
+#define INFINITY 9999 
+#define MAX 10 
+void dijikstra(int G[MAX][MAX], int n, 
+int startnode); 
+void main(){ 
+int G[MAX][MAX], i, j, n, s; clrscr(); 
+printf("\nEnter the no.of vertices:: "); 
+scanf("%d", &n); 
+printf("\nEnter the adjacency 
+matrix,-1 for no edge::\n"); 
+for(i=0;i < n;i++) { for(j=0;j < n;j++) { 
+scanf("%d", &G[i][j]); 
+if(G[i][j]==-1) 
+G[i][j]=INFINITY; } } 
+printf("\nEnter the starting node:: "); 
+scanf("%d", &s); dijikstra(G,n,s); 
+getch(); } 
+void dijikstra(int G[MAX][MAX], int n, 
+int startnode) { 
+int distance[MAX], pred[MAX]; 
+int visited[MAX], count, mindistance, 
+nextnode, i,j; for(i=0;i< n;i++) { 
+distance[i]=G[startnode][i]; 
+pred[i]=startnode; 
+visited[i]=0; } 
+distance[startnode]=0; 
+visited[startnode]=1; 
+count=1; while(count < n-1){ 
+mindistance=INFINITY; 
+for(i=0;i < n;i++) { 
+if(distance[i] < 
+mindistance&&(visited[i]==0)) 
+{ mindistance=distance[i]; 
+nextnode=i; } } 
+visited[nextnode]=1; 
+for(i=0;i < n;i++) { 
+if(visited[i]==0) { 
+if(mindistance+G[nextnode][i] < 
+distance[i]) { 
+distance[i]=mindistance+G[nextnode
+ ][i]; pred[i]=nextnode; } } } 
+count++; } for(i=0;i < n;i++) { 
+if(i!=startnode) { 
+printf("\nDistance of %c = %d", i+65, 
+distance[i]); printf("\nPath = %c", 
+i+65); j=i; do { j=pred[j]; 
+printf(" <-%c", j+65); } 
+while(j!=startnode); } } } 
+
+
+
+//broadcast tree
+#include<stdio.h> 
+void main() { 
+int a[100][100],i,j,n,k,l,v[100], 
+min=32765,c; clrscr(); 
+printf("Enter how many nodes in 
+subnet\n"); scanf("%d",&n); 
+printf("Enter adjacency matrix values 
+(-1 for no link)\n"); for(i=0;i<n;i++) { 
+v[i]=0; for(j=0;j<n;j++) { 
+scanf("%d",&a[i][j]); 
+if(a[i][j]!=-1 && min>a[i][j]) { 
+min=a[i][j]; k=i; l=j; } } } 
+printf("The links of broadcast tree 
+are\n"); 
+printf("%c - %c with delay 
+%d\n",k+65,l+65,min); 
+v[k]=v[l]=1; c=1; 
+while(c<=n-2) { 
+min=32765; 
+for(i=0;i<n;i++) { 
+if(v[i]==1) { for(j=0;j<n;j++) { 
+if(a[i][j]!=-1 && v[j]==0 && 
+min>a[i][j]) { 
+min=a[i][j]; k=i; l=j; } } } } 
+v[l]=1; 
+printf("%c - %c with delay 
+%d\n",k+65,l+65,min); 
+c++; } getch(); } 
+
+
+
+
+//distancevector 
+#include<stdio.h> 
+void main() { 
+int n,s,nn[10],delay[10], 
+m,rt[20][30],i,j,min,node; 
+clrscr(); 
+printf("\n enter no of nodes in a 
+network:"); scanf("%d",&n); 
+printf("\n enter node no(A-0,B-1,..,H
+7,I-8,J-9,K-10 to update roouting 
+table:"); scanf("%d",&s); 
+printf("\enter no of neighbours for 
+%c",s+65); scanf("%d",&m); 
+for(i=0;i<m;i++) { 
+printf("\n enter neighbouring node 
+no:"); scanf("%d",&nn[i]); 
+printf("\enter delay from %c to 
+neighbour %c:",s+65,nn[i]+65); 
+scanf("%d",&delay[i]); } 
+printf("\n enter routing tables of all 
+%d neighbours:",m); 
+for(i=0;i<m;i++) { 
+for(j=0;j<n;j++){ scanf("%d",&rt[i][j]); 
+rt[i][j]+=delay[i];} } 
+printf("\n The updated routing of %c 
+is:\n",s+65); 
+printf("\nTo|delay|line"); 
+for(i=0;i<n;i++) { 
+min=32767; for(j=0;j<m;j++) { 
+if(rt[j][i] <min) { 
+min=rt[j][i]; node=nn[j]; } } 
+if(s!=i) 
+printf("\n %c| %d | 
+%c|",i+65,min,node+65); 
+else 
+printf("\n %c| 0| - |",s+65); } 
+getch(); }
